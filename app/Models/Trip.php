@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Trip extends Model
 {
     protected $fillable = [
         'user_id', 
-        'park', 
+        'destination_id', 
         'start_date', 
         'end_date', 
-        'notes'
     ];
 
     protected $dates = [
@@ -26,6 +26,11 @@ class Trip extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function destination(): HasOne
+    {
+        return $this->hasOne(Destination::class);
+    }
+ 
     public function parks(): HasMany
     {
         return $this->hasMany(Park::class);

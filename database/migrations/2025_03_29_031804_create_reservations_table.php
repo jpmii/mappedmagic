@@ -23,8 +23,7 @@ return new class extends Migration
             $table->time('time');
             $table->string('confirmation_number')->nullable();
             $table->integer('party_size')->default(1);
-            $table->enum('status', ['Note', 'Confirmed', 'Pending', 'Cancelled'])->default('Pending');
-
+            $table->enum('status', ['Note', 'Confirmed', 'Pending'])->default('Pending');
         });
     }
 

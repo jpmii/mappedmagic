@@ -11,15 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('destinations', function (Blueprint $table) {
+        Schema::create('attractions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->foreignId('park_id')->constrained()->onDelete('cascade');
             $table->string('name');
-            $table->string('short_name');
             $table->string('api_id');
-            $table->string('city');
-            $table->string('state');
-            $table->string('country');
+            $table->string('type');
+            $table->integer('height_requirement');
+            $table->boolean('fast_pass_available');
+            $table->decimal('latitude', 10, 8);
+            $table->decimal('longitude', 11, 8);
         });
     }
 
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('destinations');
+        Schema::dropIfExists('attractions');
     }
 };

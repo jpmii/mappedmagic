@@ -11,15 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('destinations', function (Blueprint $table) {
+        Schema::create('hotels', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->foreignId('destination_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->string('short_name');
             $table->string('api_id');
-            $table->string('city');
-            $table->string('state');
-            $table->string('country');
+            $table->boolean('dvc');
+            $table->string('transportation'); //Ferry, Skyliner, Monorail, Bus
+            $table->time('pool_open')->default('10:00:00');
+            $table->time('pool_close')->default('22:00:00');
+            $table->decimal('latitude', 10, 8);
+            $table->decimal('longitude', 11, 8);
         });
     }
 
@@ -28,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('destinations');
+        Schema::dropIfExists('hotels');
     }
 };

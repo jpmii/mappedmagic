@@ -16,7 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->foreignId('park_id')->constrained()->onDelete('cascade');
             $table->string('name');
-            $table->string('api_id');
+            $table->string('api_id')->unique();
             $table->string('type');
             $table->integer('height_requirement');
             $table->boolean('fast_pass_available');

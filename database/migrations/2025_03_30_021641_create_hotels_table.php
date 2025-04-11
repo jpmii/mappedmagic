@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('destination_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->string('short_name');
-            $table->string('api_id');
+            $table->string('api_id')->unique();
             $table->boolean('dvc');
             $table->string('transportation'); //Ferry, Skyliner, Monorail, Bus
             $table->time('pool_open')->default('10:00:00');

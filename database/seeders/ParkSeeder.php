@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Http;
 use App\Models\Destination;
 use App\Models\Park;
+use Illuminate\Support\Facades\Log;
 
 class ParkSeeder extends Seeder
 {
@@ -21,15 +22,18 @@ class ParkSeeder extends Seeder
 
             foreach ($destinations as $destination) {
                     foreach ($destinationsById[$destination->api_id]['parks'] as $park) {
-
-                        Park::updateOrCreate(
-                            ['api_id' => $park['id']],
-                            [
-                                'destination_id' => $destination->id,
-                                'name' => $park['name'],
-                                'api_id' => $park['id'],
-                            ]
-                        );
+                        if(!empty($park['name']) && !empty($park['api_id'])){
+                            Park::updateOrCreate(
+                                ['api_id' => $park['id']],
+                                [
+                                    'destination_id' => $destination->id,
+                                    'name' => $park['name'],
+                                    'api_id' => $park['id'],
+                                ]
+                            );
+                        }else{
+                            Log::warning("Skipped park with missing data", ['api_id' => $park['api_id'], 'name' => $park['name']]);
+                        }
                     }
                     //Create Default?
                     Park::updateOrCreate(

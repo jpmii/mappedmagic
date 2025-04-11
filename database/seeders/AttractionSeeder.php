@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 use App\Models\Attraction;
 use App\Models\Destination;
 use App\Models\Park;
+use Illuminate\Support\Facades\Log;
 
 class AttractionSeeder extends Seeder
 {
@@ -31,19 +32,26 @@ class AttractionSeeder extends Seeder
                     if (isset($attr['entityType']) && $attr['entityType'] !== 'PARK' && $attr['entityType'] !== 'HOTEL' && $attr['entityType'] !== 'DESTINATION') {
                         $parkid = ($parksById[$attr['parentId']])? $parksById[$attr['parentId']]['id']:0;
                         
-                        Attraction::updateOrCreate(
-                            ['api_id' => $attr['id']],
-                            [
-                                'park_id' => $parkid,
-                                'name' => $attr['name'],
-                                'api_id' => $attr['id'],
-                                'type' => $attr['entityType'],
-                                'height_requirement' => 0, // Update if available
-                                'fast_pass_available' => $attr['queue'] ?? false,
-                                'latitude' => $attr['location']['latitude'] ?? 0,
-                                'longitude' => $attr['location']['longitude'] ?? 0,
-                            ]
-                        );
+                        if(!empty($attr['id']) && !empty($attr['name'])
+                        && !isset($attr['location']['latitude'], $attr['location']['longitude'])
+                        && !is_numeric($attr['location']['latitude'])
+                        && !is_numeric($attr['location']['longitude'])){
+                            Attraction::updateOrCreate(
+                                ['api_id' => $attr['id']],
+                                [
+                                    'park_id' => $parkid,
+                                    'name' => $attr['name'],
+                                    'api_id' => $attr['id'],
+                                    'type' => $attr['entityType'],
+                                    'height_requirement' => 0, // Update if available
+                                    'fast_pass_available' => $attr['queue'] ?? false,
+                                    'latitude' => $attr['location']['latitude'] ?? 0,
+                                    'longitude' => $attr['location']['longitude'] ?? 0,
+                                ]
+                            );
+                        }else{
+                            Log::warning("Skipped Attraction with missing data", $attr);
+                        }
                     }
                 }
             } else {

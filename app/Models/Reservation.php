@@ -13,6 +13,7 @@ class Reservation extends Model
         'user_id',
         'trip_id',
         'park_id',
+        'attraction_id',
         'type',
         'name',
         'date',
@@ -44,5 +45,13 @@ class Reservation extends Model
     public function park()
     {
         return $this->belongsTo(Park::class);
+    }
+
+    /**
+     * Get the attraction for the reservation.
+     */
+    public function attraction()
+    {
+        return $this->belongsTo(Attraction::class);
     }
 }

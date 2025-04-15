@@ -17,11 +17,9 @@ class TripController extends Controller
     }
 
     public function create()
-    {
-        $destinations = Destination::orderBy('name')->get(['id', 'name']);
-        
-        return inertia('Trips/Create', [
-            'destinations' => $destinations
+    {        
+        return Inertia::render('Trips/Create', [
+            'destinations' => Destination::select('id', 'name')->orderBy('name')->get(),
         ]);
     }
 
@@ -47,6 +45,8 @@ class TripController extends Controller
 
     public function show(Trip $trip)
     {
+        $trip->load('reservations.attraction'); 
+        
         return Inertia::render('Trips/Show', [
             'trip' => $trip,
         ]);
@@ -56,6 +56,7 @@ class TripController extends Controller
     {
         return Inertia::render('Trips/Edit', [
             'trip' => $trip,
+            'destinations' => Destination::select('id', 'name')->orderBy('name')->get(),
         ]);
     }
 
@@ -78,5 +79,20 @@ class TripController extends Controller
 
         return redirect()->route('trips.index');
     }
+
+    public function daily(Trip $trip)
+    {
+        $trip->load(['reservations.attraction']);
+
+        $grouped = $trip->reservations->sortBy('time')->groupBy(function ($res) {
+            return \Carbon\Carbon::parse($res->date)->format('Y-m-d');
+        });
+
+        return Inertia::render('Trips/Daily', [
+            'trip' => $trip,
+            'groupedReservations' => $grouped,
+        ]);
+    }
+
 }
 

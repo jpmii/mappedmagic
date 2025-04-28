@@ -38,11 +38,42 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
+
+    public function subscriptions()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->hasMany(Subscription::class);
+    }
+
+    public function subscribed($name = 'default')
+    {
+        return $this->subscriptions()
+            ->where('name', $name)
+            ->where(function ($query) {
+                $query->whereNull('ends_at')
+                    ->orWhere('ends_at', '>', now());
+            })
+            ->exists();
+    }
+
+    public function onTrial($name = 'default')
+    {
+        return $this->subscriptions()
+            ->where('name', $name)
+            ->whereNotNull('trial_ends_at')
+            ->where('trial_ends_at', '>', now())
+            ->exists();
+    }
+
+    public function onGracePeriod($name = 'default')
+    {
+        return $this->subscriptions()
+            ->where('name', $name)
+            ->whereNotNull('ends_at')
+            ->where('ends_at', '>', now())
+            ->exists();
     }
 }

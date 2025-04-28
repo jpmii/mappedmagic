@@ -4,6 +4,7 @@ use App\Http\Controllers\DestinationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\TripController;
+use App\Http\Controllers\SubscriptionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -42,6 +43,14 @@ Route::middleware('auth')->group(function () {
         Route::put('reservations/{reservation}', [ReservationController::class, 'update'])->name('reservations.update');
         Route::delete('reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
     });
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Subscription Routes
+    Route::get('/subscription', [SubscriptionController::class, 'show'])->name('subscription.show');
+    Route::post('/subscription', [SubscriptionController::class, 'store'])->name('subscription.store');
+    Route::post('/subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
+    Route::post('/subscription/resume', [SubscriptionController::class, 'resume'])->name('subscription.resume');
 });
 
 require __DIR__.'/auth.php';

@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
+import DeleteReservationButton from '@/Components/DeleteReservationButton';
+import AttractionTypeIcon from '@/Components/AttractionTypeIcon';
+import { Pencil } from 'lucide-react';
+
 
 export default function Daily({ trip, groupedReservations }) {
     const availableDates = Object.keys(groupedReservations).sort();
@@ -44,15 +49,33 @@ export default function Daily({ trip, groupedReservations }) {
                         </h2>
 
                         <ul className="space-y-2">
-                        {groupedReservations[selectedDate]?.length ? (
-                            groupedReservations[selectedDate].map((res) => (
-                                <li key={res.id} className="p-4 bg-gray-100 rounded">
-                                    <strong>{res.attraction?.name}</strong> at {res.time}
-                                </li>
-                            ))
-                        ) : (
-                            <p className="text-gray-600">No reservations set for this day.</p>
-                        )}
+                            {groupedReservations[selectedDate]?.length ? (
+                                groupedReservations[selectedDate].map((res) => (
+                                    <li key={res.id} className="p-4 bg-gray-100 rounded">
+                                        <div><AttractionTypeIcon type={res.type} /> <strong>{res.attraction?.name}</strong> at {new Date(`1970-01-01T${res.time}`).toLocaleTimeString('en-US', {
+                                            hour: 'numeric',
+                                            minute: 'numeric',
+                                            hour12: true,
+                                        })}</div>
+                                        <div className="flex gap-2">
+                                            <Link
+                                                href={route('reservations.edit', { trip: trip.id, reservation: res.id })}
+                                                className="text-blue-600 hover:underline"
+                                                aria-label="Edit reservation" title="Edit reservation"
+                                            >
+                                                <Pencil className="w-4 h-4 text-blue-600" />
+
+                                            </Link>
+                                            <DeleteReservationButton
+                                                tripId={trip.id}
+                                                reservationId={res.id}
+                                            />
+                                        </div>
+                                    </li>
+                                ))
+                            ) : (
+                                <p className="text-gray-600">No reservations set for this day.</p>
+                            )}
 
                         </ul>
                     </div>

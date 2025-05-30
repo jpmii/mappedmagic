@@ -15,6 +15,13 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                magicpurple: '#2a1177',
+                magicgold: '#f4ab35',
+                magicwhite: '#eff2f0',
+                magiclightpurple: '#4a2c7e',
+                magicblue: '#8ea2c5',
+            },
         },
     },
 

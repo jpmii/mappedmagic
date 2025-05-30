@@ -11,5 +11,5 @@
 }
 
 .link-list-sub-navigation {
-    @apply text-right mb-4
+    @apply text-right mb-4;
 }

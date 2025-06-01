@@ -1,6 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
-import { Link } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import DeleteReservationButton from '@/Components/DeleteReservationButton';
 import AttractionTypeIcon from '@/Components/AttractionTypeIcon';
 import { formatTime } from '@/utils';

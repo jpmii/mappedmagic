@@ -10,10 +10,11 @@ export default function AuthenticatedLayout({ header, children }) {
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
+    const isActive = (names) => names.some((name) => route().current(name));
 
     return (
-        <div className="min-h-screen bg-magicblue">
-            <nav className="border-b border-magicblue bg-magicpurple text-white">
+        <div className="min-h-screen bg-black">
+            <nav className="border-b border-magicgold bg-magicpurple text-magicwhite">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">
                         <div className="flex">
@@ -26,13 +27,13 @@ export default function AuthenticatedLayout({ header, children }) {
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink
                                     href={route('dashboard')}
-                                    active={route().current('dashboard')}
+                                    active={isActive(['dashboard'])}
                                 >
                                     Dashboard
                                 </NavLink>
                                 <NavLink
                                     href={route('trips.index')}
-                                    active={route().current('trips.index')}
+                                    active={isActive(['trips.index', 'trips.show', 'trips.edit', 'trips.daily', 'trips.create'])}
                                 >
                                     My Trips
                                 </NavLink>
@@ -136,7 +137,7 @@ export default function AuthenticatedLayout({ header, children }) {
                     <div className="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
                             href={route('dashboard')}
-                            active={route().current('dashboard')}
+                            active={isActive(['dashboard'])}
                         >
                             Dashboard
                         </ResponsiveNavLink>
@@ -169,7 +170,7 @@ export default function AuthenticatedLayout({ header, children }) {
             </nav>
 
             {header && (
-                <header className="bg-magiclightpurple shadow">
+                <header className="bg-magicpurple-700 shadow">
                     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                         {header}
                     </div>

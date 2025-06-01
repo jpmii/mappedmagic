@@ -3,13 +3,17 @@
 @tailwind utilities;
 
 .btn-primary {
-    @apply inline-flex items-center mx-2 px-4 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition;
+    @apply inline-flex items-center mx-2 px-4 py-2 bg-blue-600 text-magicwhite font-semibold rounded hover:bg-blue-700 transition;
 }
 
 .content-wrapper {
-    @apply my-12 mx-auto max-w-7xl sm:px-6 lg:px-8 overflow-hidden bg-white shadow-sm sm:rounded-lg p-6 text-gray-900;
+    @apply mt-12 mb-0 mx-auto max-w-7xl sm:px-6 lg:px-8 overflow-hidden bg-magicblack shadow-sm sm:rounded-lg p-6 text-magicwhite;
 }
 
 .link-list-sub-navigation {
     @apply text-right mb-4;
+}
+
+input[type="text"], input[type="email"], input[type="password"], textarea, input[type="date"], input[type="time"], select {
+    @apply text-magicblack;
 }

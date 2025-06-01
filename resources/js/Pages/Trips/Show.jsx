@@ -42,10 +42,10 @@ export default function Show({ trip }) {
         <AuthenticatedLayout
             header={
                 <div>
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
+                    <h2 className="text-xl font-semibold leading-tight text-magicwhite">
                         {trip.name}
                     </h2>
-                    <div className="text-sm">
+                    <div className="text-sm text-magicgold">
                         {formattedStartDate} - {formattedEndDate}
                     </div>
                 </div>
@@ -71,7 +71,7 @@ export default function Show({ trip }) {
                                         return timeA - timeB; // Sorts by time ascending
                                     })
                                     .map((reservation) => (
-                                        <li key={reservation.id} className="p-4 bg-gray-100 rounded flex justify-between items-center">
+                                        <li key={reservation.id} className="p-4 bg-magicblack-600 rounded flex justify-between items-center">
                                             <div>
                                                 <div className="font-medium flex items-center gap-1">
                                                     <AttractionTypeIcon type={reservation.type} />

@@ -12,73 +12,77 @@ export default function Daily({ trip, groupedReservations }) {
     const [selectedDate, setSelectedDate] = useState(availableDates[0]);
 
     return (
-        <AuthenticatedLayout>
-            <div className="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-white shadow-sm sm:rounded-lg text-gray-900">
-                <div className="p-4 sm:p-6">
-                    <Head title={`Daily View - ${trip.name}`} />
-                    <h1 className="text-2xl font-bold mb-4">Daily View for {trip.name}</h1>
+        <AuthenticatedLayout
+            header={
+                <div>
+                    <h2 className="text-xl font-semibold leading-tight text-magicwhite">
+                        Daily View for {trip.name}
+                    </h2>
+                </div>
+            }
+        >
+            <div className="content-wrapper">
+                <Head title={`Daily View - ${trip.name}`} />
+                {/* Date Dropdown */}
+                <div className="mb-6">
+                    <label className="block font-medium mb-1">Select Date:</label>
+                    <select
+                        className="border rounded p-2 text-magicblack"
+                        value={selectedDate}
+                        onChange={(e) => setSelectedDate(e.target.value)}
+                    >
+                        {availableDates.map((date) => (
+                            <option key={date} value={date}>
+                                {new Date(date + "T00:00:00").toLocaleDateString('en-US', {
+                                    weekday: 'long',
+                                    month: 'long',
+                                    day: 'numeric'
+                                })}
+                            </option>
+                        ))}
+                    </select>
+                </div>
 
-                    {/* Date Dropdown */}
-                    <div className="mb-6">
-                        <label className="block font-medium mb-1">Select Date:</label>
-                        <select
-                            className="border rounded p-2"
-                            value={selectedDate}
-                            onChange={(e) => setSelectedDate(e.target.value)}
-                        >
-                            {availableDates.map((date) => (
-                                <option key={date} value={date}>
-                                    {new Date(date + "T00:00:00").toLocaleDateString('en-US', {
-                                        weekday: 'long',
-                                        month: 'long',
-                                        day: 'numeric'
-                                    })}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+                {/* Daily Reservations */}
+                <div>
+                    <h2 className="text-xl font-semibold text-magicwhite mb-2">
+                        {new Date(selectedDate + "T00:00:00").toLocaleDateString('en-US', {
+                            weekday: 'long',
+                            month: 'long',
+                            day: 'numeric'
+                        })}
+                    </h2>
 
-                    {/* Daily Reservations */}
-                    <div>
-                        <h2 className="text-xl font-semibold text-gray-800 mb-2">
-                            {new Date(selectedDate + "T00:00:00").toLocaleDateString('en-US', {
-                                weekday: 'long',
-                                month: 'long',
-                                day: 'numeric'
-                            })}
-                        </h2>
+                    <ul className="space-y-2">
+                        {groupedReservations[selectedDate]?.length ? (
+                            groupedReservations[selectedDate].map((res) => (
+                                <li key={res.id} className="p-4 bg-magicblack-600 rounded flex justify-between items-center">
+                                    <div><AttractionTypeIcon type={res.type} /> <strong>{res.attraction?.name}</strong> at {new Date(`1970-01-01T${res.time}`).toLocaleTimeString('en-US', {
+                                        hour: 'numeric',
+                                        minute: 'numeric',
+                                        hour12: true,
+                                    })}</div>
+                                    <div className="flex gap-2">
+                                        <Link
+                                            href={route('reservations.edit', { trip: trip.id, reservation: res.id })}
+                                            className="text-blue-600 hover:underline"
+                                            aria-label="Edit reservation" title="Edit reservation"
+                                        >
+                                            <Pencil className="w-4 h-4 text-blue-600" />
 
-                        <ul className="space-y-2">
-                            {groupedReservations[selectedDate]?.length ? (
-                                groupedReservations[selectedDate].map((res) => (
-                                    <li key={res.id} className="p-4 bg-gray-100 rounded">
-                                        <div><AttractionTypeIcon type={res.type} /> <strong>{res.attraction?.name}</strong> at {new Date(`1970-01-01T${res.time}`).toLocaleTimeString('en-US', {
-                                            hour: 'numeric',
-                                            minute: 'numeric',
-                                            hour12: true,
-                                        })}</div>
-                                        <div className="flex gap-2">
-                                            <Link
-                                                href={route('reservations.edit', { trip: trip.id, reservation: res.id })}
-                                                className="text-blue-600 hover:underline"
-                                                aria-label="Edit reservation" title="Edit reservation"
-                                            >
-                                                <Pencil className="w-4 h-4 text-blue-600" />
+                                        </Link>
+                                        <DeleteReservationButton
+                                            tripId={trip.id}
+                                            reservationId={res.id}
+                                        />
+                                    </div>
+                                </li>
+                            ))
+                        ) : (
+                            <p className="text-gray-600">No reservations set for this day.</p>
+                        )}
 
-                                            </Link>
-                                            <DeleteReservationButton
-                                                tripId={trip.id}
-                                                reservationId={res.id}
-                                            />
-                                        </div>
-                                    </li>
-                                ))
-                            ) : (
-                                <p className="text-gray-600">No reservations set for this day.</p>
-                            )}
-
-                        </ul>
-                    </div>
+                    </ul>
                 </div>
             </div>
         </AuthenticatedLayout>

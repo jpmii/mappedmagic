@@ -27,9 +27,10 @@ export default function Create({ trip, parks, attractions }) {
     };
 
     return (
-        <AuthenticatedLayout header={<h2 className="text-xl font-semibold">Add Reservation for {trip.name}</h2>}>
+        <AuthenticatedLayout header={<h2 className="text-xl font-semibold leading-tight text-magicwhite">Add Reservation for {trip.name}</h2>}>
             <Head title="New Reservation" />
-            <form onSubmit={handleSubmit} className="max-w-xl mx-auto bg-white p-6 rounded shadow">
+
+            <form onSubmit={handleSubmit} className="max-w-xl mx-auto bg-magicblack text-magicwhite p-6 rounded shadow">
 
                 {/* Park Dropdown */}
                 <div className="mb-4">

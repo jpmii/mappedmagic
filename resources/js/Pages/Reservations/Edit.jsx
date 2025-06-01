@@ -18,13 +18,16 @@ export default function Edit({ reservation, parks, attractions }) {
     };
 
     return (
-        <AuthenticatedLayout>
+        <AuthenticatedLayout header={
+                <h2 className="text-xl font-semibold leading-tight text-magicwhite">
+                    Edit Reservation
+                </h2>
+            }>
             <Head title="Edit Reservation" />
 
-            <div className="max-w-2xl mx-auto py-8">
-                <h1 className="text-2xl font-bold mb-6">Edit Reservation</h1>
+            <div className="content-wrapper">
 
-                <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow">
+                <form onSubmit={handleSubmit} className="bg-magicblack p-6 rounded shadow">
                     {/* Date */}
                     <div className="mb-4">
                         <label className="block font-medium">Date</label>

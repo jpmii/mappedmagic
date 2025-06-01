@@ -15,13 +15,14 @@ export default function Edit({ trip, destinations }) {
     };
 
     return (
-        <AuthenticatedLayout>
-            <Head title="Edit Trip" />
-
-            <div className="max-w-2xl mx-auto py-8">
-                <h1 className="text-2xl font-bold mb-4">Edit Trip</h1>
-
-                <form onSubmit={handleSubmit} className="bg-white p-6 shadow rounded">
+        <AuthenticatedLayout header={
+                <h2 className="text-xl font-semibold leading-tight text-magicwhite">
+                    Edit Trip "{trip.name}"
+                </h2>
+            }>
+            <Head title={"Edit Trip " + trip.name} />
+            <div className="content-wrapper">
+                <form onSubmit={handleSubmit} className="bg-magicblack p-6 shadow rounded">
                     {/* Trip Name */}
                     <div className="mb-4">
                         <label className="block font-medium">Trip Name</label>

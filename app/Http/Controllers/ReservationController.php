@@ -64,7 +64,7 @@ class ReservationController extends Controller
         ]);
     }
 
-    public function update(Request $request, Reservation $reservation)
+    public function update(Request $request, Trip $trip, Reservation $reservation)
     {
         $validated = $request->validate([
             'park_id' => 'required|integer|exists:parks,id',

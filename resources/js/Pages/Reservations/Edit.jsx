@@ -4,7 +4,7 @@ import { Head, useForm } from '@inertiajs/react';
 export default function Edit({ reservation, parks, attractions }) {
     const { data, setData, put, processing, errors } = useForm({
         date: reservation.date || '',
-        time: reservation.time || '',
+        time: reservation.time ? reservation.time.slice(0, 5) : '',
         park_id: reservation.park_id || '',
         attraction_id: reservation.attraction_id || '',
         confirmation_number: reservation.confirmation_number || '',
@@ -14,7 +14,7 @@ export default function Edit({ reservation, parks, attractions }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        put(route('reservations.update', reservation.id));
+        put(route('reservations.update', { trip: reservation.trip_id, reservation: reservation.id }));
     };
 
     return (

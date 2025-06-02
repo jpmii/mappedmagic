@@ -6,6 +6,7 @@ use App\Models\Destination;
 use App\Models\Trip;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Services\WaitTimeService;
 
 class TripController extends Controller
 {
@@ -17,7 +18,7 @@ class TripController extends Controller
     }
 
     public function create()
-    {        
+    {
         return Inertia::render('Trips/Create', [
             'destinations' => Destination::select('id', 'name')->orderBy('name')->get(),
         ]);
@@ -45,8 +46,8 @@ class TripController extends Controller
 
     public function show(Trip $trip)
     {
-        $trip->load('reservations.attraction'); 
-        
+        $trip->load('reservations.attraction');
+
         return Inertia::render('Trips/Show', [
             'trip' => $trip,
         ]);
@@ -80,7 +81,7 @@ class TripController extends Controller
         return redirect()->route('trips.index');
     }
 
-    public function daily(Trip $trip)
+    public function daily(Trip $trip, WaitTimeService $waitTimeService)
     {
         $trip->load(['reservations.attraction']);
 
@@ -88,11 +89,25 @@ class TripController extends Controller
             return \Carbon\Carbon::parse($res->date)->format('Y-m-d');
         });
 
+        // Loop through each reservation and fetch wait time
+        foreach ($trip->reservations as $reservation) {
+            $apiID = $reservation->attraction->api_id ?? null;
+            if (!$apiID) {
+                continue; // Skip if no API ID is available
+            }
+            $reservation->live_data = $waitTimeService->fetchWaitTime($apiID);
+        }
+
         return Inertia::render('Trips/Daily', [
             'trip' => $trip,
             'groupedReservations' => $grouped,
         ]);
     }
 
+    // Example helper method
+    protected function fetchWaitTime($attraction)
+    {
+        // Call your third-party API here and return the wait time
+        // return $apiResult['wait_time'] ?? null;
+    }
 }
-

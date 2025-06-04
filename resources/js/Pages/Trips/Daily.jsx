@@ -8,9 +8,13 @@ import AttractionStatusIcon from '@/Components/AttractionStatusIcon';
 import { Pencil } from 'lucide-react';
 
 
-export default function Daily({ trip, groupedReservations }) {
+export default function Daily({ trip, groupedReservations, parks }) {
     const availableDates = Object.keys(groupedReservations).sort();
     const [selectedDate, setSelectedDate] = useState(availableDates[0]);
+    const uniqueParkIds = new Set();
+    groupedReservations[selectedDate]?.forEach(res => {
+        if (res.park_id) uniqueParkIds.add(res.park_id);
+    });
 
     return (
         <AuthenticatedLayout
@@ -83,14 +87,14 @@ export default function Daily({ trip, groupedReservations }) {
                                         <pre className="text-xs text-gray-400">{JSON.stringify(res.live_data, null, 2)}</pre>
                                         {res.live_data?.status === 'OPERATING' && res.type === 'ATTRACTION' && res.live_data.standby_wait && (
                                             <div
-                                                className={`ml-2 ${
-                                                    res.live_data.standby_wait < 30
-                                                        ? 'bg-green-400'
-                                                        : res.live_data.standby_wait < 60
+                                                className={`text-magicblack ml-2 ${res.live_data.standby_wait < 30
+                                                    ? 'bg-green-400'
+                                                    : res.live_data.standby_wait < 60
                                                         ? 'bg-yellow-400'
                                                         : 'bg-red-400'
-                                                }`}
+                                                    }`}
                                             >
+                                                <span className="block">Standby</span>
                                                 {res.live_data.standby_wait}
                                             </div>
                                         )}
@@ -102,6 +106,15 @@ export default function Daily({ trip, groupedReservations }) {
                         )}
 
                     </ul>
+
+                    {Array.from(uniqueParkIds).map(parkId => {
+                        const park = parks.find(p => p.id === parkId);
+                        return (
+                            <h2 key={parkId} className="text-xl font-semibold text-magicwhite mb-2">
+                                All {park ? park.name : 'Unknown'} Attractions
+                            </h2>
+                        );
+                    })}
                 </div>
             </div>
         </AuthenticatedLayout>

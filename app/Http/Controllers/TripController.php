@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Destination;
+use App\Models\Park;
 use App\Models\Trip;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -101,6 +102,8 @@ class TripController extends Controller
         return Inertia::render('Trips/Daily', [
             'trip' => $trip,
             'groupedReservations' => $grouped,
+            'parks' => Park::all(),
+
         ]);
     }
 

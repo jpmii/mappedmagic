@@ -1,18 +1,40 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
+import NavLink from '@/Components/NavLink';
 import { Link } from '@inertiajs/react';
 
 export default function GuestLayout({ children }) {
-    return (
-        <div className="flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0">
-            <div>
-                <Link href="/">
-                    <ApplicationLogo className="h-20 w-20 fill-current text-gray-500" />
-                </Link>
-            </div>
+    const isActive = (names) => names.some((name) => route().current(name));
 
-            <div className="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg">
-                {children}
-            </div>
+    return (
+        <div className="min-h-screen bg-black">
+            <nav className="border-b border-magicgold bg-magicpurple text-magicwhite">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div className="flex h-16 justify-between">
+                        <div className="flex">
+                            <div className="flex shrink-0 items-center">
+                                <Link href="/">
+                                    <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
+                                </Link>
+                            </div>
+                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <NavLink
+                                    href={route('dashboard')}
+                                    active={isActive(['dashboard'])}
+                                >
+                                    About
+                                </NavLink>
+                                <NavLink
+                                    href={route('login')}
+                                    active={isActive(['login'])}
+                                >
+                                    Login
+                                </NavLink>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <main>{children}</main>
         </div>
     );
 }

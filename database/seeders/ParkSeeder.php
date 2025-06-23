@@ -22,7 +22,7 @@ class ParkSeeder extends Seeder
 
             foreach ($destinations as $destination) {
                     foreach ($destinationsById[$destination->api_id]['parks'] as $park) {
-                        if(!empty($park['name']) && !empty($park['api_id'])){
+                        if(!empty($park['name']) && !empty($park['id'])){
                             Park::updateOrCreate(
                                 ['api_id' => $park['id']],
                                 [
@@ -32,7 +32,7 @@ class ParkSeeder extends Seeder
                                 ]
                             );
                         }else{
-                            Log::warning("Skipped park with missing data", ['api_id' => $park['api_id'], 'name' => $park['name']]);
+                            Log::warning("Skipped park with missing data", ['api_id' => $park['id'], 'name' => $park['name']]);
                         }
                     }
                     //Create Default?

@@ -32,10 +32,7 @@ class AttractionSeeder extends Seeder
                     if (isset($attr['entityType']) && $attr['entityType'] !== 'PARK' && $attr['entityType'] !== 'HOTEL' && $attr['entityType'] !== 'DESTINATION') {
                         $parkid = ($parksById[$attr['parentId']])? $parksById[$attr['parentId']]['id']:0;
                         
-                        if(!empty($attr['id']) && !empty($attr['name'])
-                        && !isset($attr['location']['latitude'], $attr['location']['longitude'])
-                        && !is_numeric($attr['location']['latitude'])
-                        && !is_numeric($attr['location']['longitude'])){
+                        if(!empty($attr['id']) && !empty($attr['name'])){
                             Attraction::updateOrCreate(
                                 ['api_id' => $attr['id']],
                                 [

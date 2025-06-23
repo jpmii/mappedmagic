@@ -16,12 +16,12 @@ export default function Home({ user }) {
             }
         >
             <Head title="Mapped Magic" />
-            <div className="relative w-full overflow-hidden">
+            <div className="relative w-full overflow-hidden border-b border-magicgold">
                 <img
                     src="/images/hero.jpg"
                     alt="Magical Park"
-                    className="w-full h-64 object-cover brightness-75 opacity-50"
-                    style={{ maxHeight: 350 }}
+                    className="w-full h-600 object-cover brightness-75 opacity-50"
+                    style={{ maxHeight: 650 }}
                 />
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                     <h1 className="text-4xl font-bold text-magicwhite drop-shadow-lg mb-4">

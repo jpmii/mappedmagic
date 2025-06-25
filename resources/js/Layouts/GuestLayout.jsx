@@ -2,11 +2,11 @@ import ApplicationLogo from '@/Components/ApplicationLogo';
 import NavLink from '@/Components/NavLink';
 import { Link } from '@inertiajs/react';
 
-export default function GuestLayout({ children }) {
+export default function GuestLayout({ header, children }) {
     const isActive = (names) => names.some((name) => route().current(name));
 
     return (
-        <div className="min-h-screen bg-black">
+        <div className="min-h-screen bg-black" id="guest-layout">
             <nav className="border-b border-magicgold bg-magicpurple text-magicwhite">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">
@@ -24,6 +24,12 @@ export default function GuestLayout({ children }) {
                                     About
                                 </NavLink>
                                 <NavLink
+                                    href={route('register')}
+                                    active={isActive(['register'])}
+                                >
+                                    Register
+                                </NavLink>
+                                <NavLink
                                     href={route('login')}
                                     active={isActive(['login'])}
                                 >
@@ -34,6 +40,15 @@ export default function GuestLayout({ children }) {
                     </div>
                 </div>
             </nav>
+            
+            {header && (
+                <header className="bg-magicpurple-700 shadow">
+                    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                        {header}
+                    </div>
+                </header>
+            )}
+
             <main>{children}</main>
         </div>
     );

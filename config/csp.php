@@ -10,7 +10,6 @@ return [
      * any class that implements `Spatie\Csp\Preset`
      */
     'presets' => [
-        Spatie\Csp\Presets\Basic::class,
         App\Csp\CustomPreset::class,
     ],
 
@@ -51,7 +50,7 @@ return [
     /**
      * Headers will be added when Vite is hot reloading.
      */
-    'enabled_while_hot_reloading' => env('CSP_ENABLED_WHILE_HOT_RELOADING', false),
+    'enabled_while_hot_reloading' => env('CSP_ENABLED_WHILE_HOT_RELOADING', true),
 
     /*
      * The class responsible for generating the nonces used in inline tags and headers.

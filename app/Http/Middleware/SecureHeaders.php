@@ -33,7 +33,7 @@ class SecureHeaders
             $csp .= "connect-src * ws: wss:; ";
             $csp .= "font-src * data:; ";
             $csp .= "img-src * data: blob: file:;";
-            $response->headers->set('Content-Security-Policy', $csp);
+            //$response->headers->set('Content-Security-Policy', $csp);
         } else {
             // Production environment
             $csp = "default-src 'self'; ";
@@ -41,7 +41,7 @@ class SecureHeaders
             $csp .= "script-src 'self' 'unsafe-inline' 'unsafe-eval'; ";
             $csp .= "font-src 'self' https://fonts.bunny.net; ";
             $csp .= "img-src 'self' data: blob:;";
-            $response->headers->set('Content-Security-Policy', $csp);
+            //$response->headers->set('Content-Security-Policy', $csp);
         }
         
         return $response;

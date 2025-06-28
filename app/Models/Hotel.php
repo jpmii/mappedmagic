@@ -30,6 +30,11 @@ class Hotel extends Model
         return $this->belongsTo(Destination::class);
     }
 
+    public function hotelStays()
+    {
+        return $this->hasMany(HotelStay::class);
+    }
+
     /**
      * Scope to filter hotels that are Disney Vacation Club (DVC).
      */

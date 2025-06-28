@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\TripController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\HotelStayController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -42,6 +43,16 @@ Route::middleware('auth')->group(function () {
         Route::get('reservations/{reservation}/edit', [ReservationController::class, 'edit'])->name('reservations.edit');
         Route::put('reservations/{reservation}', [ReservationController::class, 'update'])->name('reservations.update');
         Route::delete('reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
+    });
+    //Hotel Stays
+    Route::prefix('trips/{trip}')->middleware(['auth'])->group(function () {
+        Route::get('hotel-stays', [HotelStayController::class, 'index'])->name('hotel-stays.index');
+        Route::get('hotel-stays/create', [HotelStayController::class, 'create'])->name('hotel-stays.create');
+        Route::post('hotel-stays', [HotelStayController::class, 'store'])->name('hotel-stays.store');
+        Route::get('hotel-stays/{hotelStay}', [HotelStayController::class, 'show'])->name('hotel-stays.show');
+        Route::get('hotel-stays/{hotelStay}/edit', [HotelStayController::class, 'edit'])->name('hotel-stays.edit');
+        Route::put('hotel-stays/{hotelStay}', [HotelStayController::class, 'update'])->name('hotel-stays.update');
+        Route::delete('hotel-stays/{hotelStay}', [HotelStayController::class, 'destroy'])->name('hotel-stays.destroy');
     });
 });
 

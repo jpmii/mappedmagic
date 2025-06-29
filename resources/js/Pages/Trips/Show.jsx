@@ -1,11 +1,12 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
 import DeleteReservationButton from '@/Components/DeleteReservationButton';
+import DeleteHotelButton from '@/Components/DeleteHotelButton';
 import AttractionTypeIcon from '@/Components/AttractionTypeIcon';
 import { formatTime } from '@/utils';
 import { Plus, Pencil, Calendar1, Hotel } from 'lucide-react';
 
-export default function Show({ trip }) {
+export default function Show({ trip, hotelStays }) {
     const formattedStartDate = new Date(trip.start_date).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -68,14 +69,14 @@ export default function Show({ trip }) {
                 </div>
 
                 {/* Hotel Stays Section */}
-                {trip.hotel_stays && trip.hotel_stays.length > 0 && (
+                {hotelStays && hotelStays.length > 0 && (
                     <div className="my-6">
                         <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                             <Hotel className="w-5 h-5" />
                             Hotel Stays
                         </h3>
                         <div className="space-y-3">
-                            {trip.hotel_stays
+                            {hotelStays
                                 .sort((a, b) => new Date(a.check_in_date) - new Date(b.check_in_date))
                                 .map((hotelStay) => (
                                     <div key={hotelStay.id} className="p-4 bg-magicblack-600 rounded">
@@ -118,14 +119,12 @@ export default function Show({ trip }) {
                                                 >
                                                     <Pencil className="w-4 h-4 text-blue-600" />
                                                 </Link>
-                                                <Link
-                                                    href={route('hotel-stays.show', { trip: trip.id, hotelStay: hotelStay.id })}
-                                                    className="text-green-600 hover:underline"
-                                                    aria-label="View hotel stay details"
-                                                    title="View hotel stay details"
-                                                >
-                                                    View
-                                                </Link>
+                                                <DeleteHotelButton
+                                                        tripId={trip.id}
+                                                        hotelStayId={hotelStay.id}
+                                                        aria-label="Delete Hotel Stay"
+                                                        title="Delete Hotel Stay"
+                                                    />
                                             </div>
                                         </div>
                                     </div>

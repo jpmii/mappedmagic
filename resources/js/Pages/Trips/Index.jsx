@@ -32,12 +32,21 @@ export default function Index({ trips }) {
                                 month: 'long',
                                 day: 'numeric',
                             });
+                            // Get unique hotel names for this trip
+                            const hotelNames = (trip.hotel_stays || [])
+                                .map(stay => stay.hotel?.name)
+                                .filter(Boolean);
                             return (
-                                <li key={trip.id}>
+                                <li key={trip.id} className='mb-4'>
                                     <Link href={route('trips.show', trip.id)}>{trip.name}</Link>
                                     <div className="text-sm text-magicgold">
                                         {formattedStartDate} - {formattedEndDate}
                                     </div>
+                                    {hotelNames.length > 0 && (
+                                        <div className="text-xs text-gray-400">
+                                            Hotels: {hotelNames.join(', ')}
+                                        </div>
+                                    )}
                                 </li>
                             );
                         })}

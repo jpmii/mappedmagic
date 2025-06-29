@@ -1,32 +1,38 @@
+import { useForm } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, useForm } from '@inertiajs/react';
-import { useState } from 'react';
 
-export default function Create({ trip, hotels }) {
-    const { data, setData, post, processing, errors } = useForm({
-        hotel_id: '',
-        description: '',
-        confirmation_number: '',
-        price_per_night: '',
-        number_of_nights: 1,
-        number_of_rooms: 1,
-        room_type: '',
-        check_in_date: '',
-        check_out_date: '',
-        check_in_time: '',
-        check_out_time: '',
-        notes: '',
-        is_booked: false,
+function formatDate(dateString) {
+    if (!dateString) return '';
+    // Handles both 'YYYY-MM-DD' and 'YYYY-MM-DDTHH:mm:ss.sssZ'
+    return dateString.split('T')[0];
+}
+
+export default function Edit({ trip, hotelStay, hotels }) {
+    const { data, setData, put, processing, errors } = useForm({
+        hotel_id: hotelStay.hotel_id || '',
+        description: hotelStay.description || '',
+        confirmation_number: hotelStay.confirmation_number || '',
+        price_per_night: hotelStay.price_per_night || '',
+        number_of_nights: hotelStay.number_of_nights || 1,
+        number_of_rooms: hotelStay.number_of_rooms || 1,
+        room_type: hotelStay.room_type || '',
+        check_in_date: formatDate(hotelStay.check_in_date),
+        check_out_date: formatDate(hotelStay.check_out_date),
+        check_in_time: hotelStay.check_in_time || '',
+        check_out_time: hotelStay.check_out_time || '',
+        notes: hotelStay.notes || '',
+        is_booked: hotelStay.is_booked || false,
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route('hotel-stays.store', trip.id));
+        put(route('hotel-stays.update', [trip.id, hotelStay.id]));
     };
 
     return (
-        <AuthenticatedLayout header={<h2 className="text-xl font-semibold leading-tight text-magicwhite">Add Hotel Stay for {trip.name}</h2>}>
-            <Head title="New Hotel Stay" />
+        <AuthenticatedLayout header={<h2 className="text-xl font-semibold leading-tight text-magicwhite">Edit Hotel Stay for {trip.name}</h2>}>
+            <Head title="Edit Hotel Stay" />
 
             <form onSubmit={handleSubmit} className="max-w-xl mx-auto bg-magicblack text-magicwhite p-6 rounded shadow">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -228,7 +234,7 @@ export default function Create({ trip, hotels }) {
                         disabled={processing}
                         className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:opacity-50"
                     >
-                        {processing ? 'Adding...' : 'Add Hotel Stay'}
+                        {processing ? 'Updating...' : 'Update Hotel Stay'}
                     </button>
                 </div>
             </form>

@@ -14,7 +14,9 @@ class TripController extends Controller
     public function index()
     {
         return Inertia::render('Trips/Index', [
-            'trips' => Trip::where('user_id', auth()->id())->get(),
+            'trips' => Trip::where('user_id', auth()->id())
+                ->with(['hotelStays.hotel'])
+                ->get(),
         ]);
     }
 
@@ -48,9 +50,11 @@ class TripController extends Controller
     public function show(Trip $trip)
     {
         $trip->load('reservations.attraction');
+        $trip->load(['hotelStays.hotel']);
 
         return Inertia::render('Trips/Show', [
             'trip' => $trip,
+            'hotelStays' => $trip->hotelStays()->with('hotel')->orderBy('check_in_date')->get(),
         ]);
     }
 
@@ -107,10 +111,4 @@ class TripController extends Controller
         ]);
     }
 
-    // Example helper method
-    protected function fetchWaitTime($attraction)
-    {
-        // Call your third-party API here and return the wait time
-        // return $apiResult['wait_time'] ?? null;
-    }
 }

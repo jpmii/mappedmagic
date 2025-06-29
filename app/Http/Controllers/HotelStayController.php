@@ -28,7 +28,7 @@ class HotelStayController extends Controller
     {
         return Inertia::render('HotelStays/Create', [
             'trip' => $trip,
-            'hotels' => Hotel::orderBy('name')->get(),
+            'hotels' => Hotel::where('destination_id', $trip->destination_id)->orderBy('name')->get(),
         ]);
     }
 
@@ -78,7 +78,7 @@ class HotelStayController extends Controller
         return Inertia::render('HotelStays/Edit', [
             'trip' => $trip,
             'hotelStay' => $hotelStay->load('hotel'),
-            'hotels' => Hotel::orderBy('name')->get(),
+            'hotels' => Hotel::where('destination_id', $trip->destination_id)->orderBy('name')->get(),
         ]);
     }
 

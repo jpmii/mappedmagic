@@ -32,6 +32,14 @@ class Park extends Model
     }
 
     /**
+     * Get the attractions for this park.
+     */
+    public function attractions()
+    {
+        return $this->hasMany(Attraction::class);
+    }
+
+    /**
      * Scope to filter parks by destination.
      */
     public function scopeByDestination($query, $destinationId)

@@ -24,6 +24,7 @@ class WaitTimeService
 
         if ($response->successful()) {
             $data = $response->json();
+            $waitTime = [];
             foreach ($data['liveData'] as $ld){
                 $waitTime['status'] = $ld['status'] ?? null;
                 $waitTime['operating_hours'] = $ld['operatingHours'] ?? null;

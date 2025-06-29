@@ -8,6 +8,7 @@ use App\Models\Trip;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Services\WaitTimeService;
+use Illuminate\Support\Facades\Cache;
 
 class TripController extends Controller
 {
@@ -94,20 +95,22 @@ class TripController extends Controller
             return \Carbon\Carbon::parse($res->date)->format('Y-m-d');
         });
 
-        // Loop through each reservation and fetch wait time
-        foreach ($trip->reservations as $reservation) {
-            $apiID = $reservation->attraction->api_id ?? null;
-            if (!$apiID) {
-                continue; // Skip if no API ID is available
+        // Eager load parks and their attractions
+        $parks = Park::with('attractions')->get();
+
+        // Build a map of attraction_id => cached live_data (or null)
+        $waitTimes = [];
+        foreach ($parks as $park) {
+            foreach ($park->attractions as $attraction) {
+                $waitTimes[$attraction->id] = Cache::get("wait_time_{$attraction->id}");
             }
-            $reservation->live_data = $waitTimeService->fetchWaitTime($apiID);
         }
 
         return Inertia::render('Trips/Daily', [
             'trip' => $trip,
             'groupedReservations' => $grouped,
-            'parks' => Park::all(),
-
+            'parks' => $parks,
+            'waitTimes' => $waitTimes,
         ]);
     }
 

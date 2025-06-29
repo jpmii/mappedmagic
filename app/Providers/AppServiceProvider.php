@@ -27,9 +27,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Vite::prefetch(concurrency: 3);
         app(Schedule::class)->command('themepark:sync')->dailyAt('02:00');
-
-        // Register the secure-headers middleware
-        Route::pushMiddlewareToGroup('web', \App\Http\Middleware\SecureHeaders::class);
+        app(Schedule::class)->command('waittimes:cache-all')->everyFiveMinutes();
 
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());

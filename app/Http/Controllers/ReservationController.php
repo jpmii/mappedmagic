@@ -43,6 +43,7 @@ class ReservationController extends Controller
             'trip_id' => $trip->id,
             'park_id'=> $validated['park_id'],
             'attraction_id' => $validated['attraction_id'],
+            'name' => $attraction->name,
             'type'=> $atype,
             'date'=> $validated['date'],
             'time'=> $validated['time'],

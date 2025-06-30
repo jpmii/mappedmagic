@@ -103,7 +103,7 @@ export default function Create({ trip, hotels }) {
                             min="1"
                             value={data.number_of_nights}
                             onChange={(e) => setData('number_of_nights', e.target.value)}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-black focus:border-indigo-500 focus:ring-indigo-500"
                         />
                         {errors.number_of_nights && (
                             <p className="text-red-500 text-sm mt-1">{errors.number_of_nights}</p>
@@ -119,7 +119,7 @@ export default function Create({ trip, hotels }) {
                             min="1"
                             value={data.number_of_rooms}
                             onChange={(e) => setData('number_of_rooms', e.target.value)}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-black focus:border-indigo-500 focus:ring-indigo-500"
                         />
                         {errors.number_of_rooms && (
                             <p className="text-red-500 text-sm mt-1">{errors.number_of_rooms}</p>
@@ -136,7 +136,7 @@ export default function Create({ trip, hotels }) {
                             min="0"
                             value={data.price_per_night}
                             onChange={(e) => setData('price_per_night', e.target.value)}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-black focus:border-indigo-500 focus:ring-indigo-500"
                         />
                     </div>
 
@@ -148,7 +148,7 @@ export default function Create({ trip, hotels }) {
                             type="text"
                             value={data.confirmation_number}
                             onChange={(e) => setData('confirmation_number', e.target.value)}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-black focus:border-indigo-500 focus:ring-indigo-500"
                         />
                     </div>
                 </div>

@@ -6,6 +6,7 @@ use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\TripController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\HotelStayController;
+use App\Http\Controllers\ContactController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -62,6 +63,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/subscription', [SubscriptionController::class, 'store'])->name('subscription.store');
     Route::post('/subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
     Route::post('/subscription/resume', [SubscriptionController::class, 'resume'])->name('subscription.resume');
+});
+
+Route::get('/contact', [ContactController::class, 'show'])->name('contact.show');
+Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
+
+Route::get('/terms', function () {
+    return Inertia::render('Terms');
+});
+
+Route::get('/privacy', function () {
+    return Inertia::render('Privacy');
 });
 
 require __DIR__.'/auth.php';

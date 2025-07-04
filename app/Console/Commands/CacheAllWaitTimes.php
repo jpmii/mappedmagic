@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Models\Attraction;
 use App\Services\WaitTimeService;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class CacheAllWaitTimes extends Command
 {
@@ -28,6 +29,15 @@ class CacheAllWaitTimes extends Command
      */
     public function handle(WaitTimeService $waitTimeService)
     {
+        $active = DB::table('sessions')
+            ->where('last_activity', '>=', now()->subMinutes(15)->timestamp)
+            ->exists();
+
+        if (! $active) {
+            $this->info('No users logged in, skipping.');
+            return 0;
+        }
+
         foreach (Attraction::all() as $attraction) {
             if ($attraction->api_id) {
                 $waitTime = $waitTimeService->fetchWaitTime($attraction->api_id);

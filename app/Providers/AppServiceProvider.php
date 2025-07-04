@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Vite::prefetch(concurrency: 3);
         app(Schedule::class)->command('themepark:sync')->dailyAt('02:00');
-        app(Schedule::class)->command('waittimes:cache-all')->everyFiveMinutes();
+        app(Schedule::class)->command('waittimes:cache-all')->everyFifteenMinutes();
 
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());

@@ -178,7 +178,7 @@ export default function AuthenticatedLayout({ header, children }) {
             )}
 
             <main>{children}</main>
-            <footer className="bg-magicpurple-700 text-magicwhite m-10 rounded-lg shadow-sm dark:bg-gray-800">
+            <footer className="bg-magicpurple-700 text-magicwhite m-10 rounded-lg shadow-sm">
                 <div className="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
                     <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">&copy; {new Date().getFullYear()} <a href="https://mappedmagic.com/" className="hover:underline">MappedMagic</a>. All Rights Reserved.
                     </span>

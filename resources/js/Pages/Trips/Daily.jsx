@@ -130,6 +130,7 @@ export default function Daily({ trip, groupedReservations, parks, waitTimes: ini
     });
 
     useWaitTimes(Array.from(uniqueParkIds), setWaitTimes);
+    console.log('Current waitTimes state:', waitTimes);
 
     // Filter entities by type
     // const attractions = filterEntitiesByType(waitTimes, 'ATTRACTION');
@@ -187,6 +188,7 @@ export default function Daily({ trip, groupedReservations, parks, waitTimes: ini
                                 const entity = parkEntities.find(e => e.id === res.attraction_id);
                                 const standbyWait = getWaitTime(entity, 'STANDBY');
                                 const paidStandbyWait = getWaitTime(entity, 'PAID_STANDBY');
+                                console.log('Reservation:', res, 'Entity:', entity, 'Standby:', standbyWait, 'Paid:', paidStandbyWait);
                                 
                                 return (
                                     <li key={res.id} className="p-4 bg-magicblack-600 rounded">

@@ -120,7 +120,8 @@ function EntityColumn({ title, entities, showWaitTimes = true, emptyMessage = "N
     );
 }
 
-export default function Daily({ trip, groupedReservations, parks, waitTimes }) {
+export default function Daily({ trip, groupedReservations, parks, waitTimes: initialWaitTimes }) {
+    const [waitTimes, setWaitTimes] = useState(initialWaitTimes);
     const availableDates = Object.keys(groupedReservations).sort();
     const [selectedDate, setSelectedDate] = useState(availableDates[0]);
     const uniqueParkIds = new Set();
@@ -128,7 +129,7 @@ export default function Daily({ trip, groupedReservations, parks, waitTimes }) {
         if (res.park_id) uniqueParkIds.add(res.park_id);
     });
 
-    useWaitTimes(Array.from(uniqueParkIds), waitTimes);
+    useWaitTimes(Array.from(uniqueParkIds), setWaitTimes);
 
     // Filter entities by type
     // const attractions = filterEntitiesByType(waitTimes, 'ATTRACTION');

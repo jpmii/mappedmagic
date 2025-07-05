@@ -7,6 +7,7 @@ use App\Models\Attraction;
 use App\Services\WaitTimeService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CacheAllWaitTimes extends Command
 {
@@ -34,10 +35,10 @@ class CacheAllWaitTimes extends Command
             ->exists();
 
         if (! $active) {
-            $this->info('No users logged in, skipping.');
+            Log::info('No users logged in, skipping.');
             return 0;
         }else {
-            $this->info('Users are logged in, proceeding to cache wait times.');
+            Log::info('Users are logged in, proceeding to cache wait times.');
         }
 
         foreach (Attraction::all() as $attraction) {

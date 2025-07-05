@@ -35,7 +35,7 @@ class CacheAllWaitTimes extends Command
             ->exists();
 
         if (! $active) {
-            Log::info('No users logged in, skipping.');
+            $this->info('No users logged in, skipping.');
             return 0;
         }else {
             Log::info('Users are logged in, proceeding to cache wait times.');

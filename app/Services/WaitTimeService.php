@@ -42,11 +42,6 @@ class WaitTimeService
             
             // Cache the live data for 5 minutes
             Cache::put($cacheKey, $liveData, now()->addMinutes(5));
-            Log::info("WaitTimeService: Cached data for {$apiId}", [
-                'cache_key' => $cacheKey,
-                'cache_duration' => '5 minutes'
-            ]);
-            
             return $liveData;
         }
 

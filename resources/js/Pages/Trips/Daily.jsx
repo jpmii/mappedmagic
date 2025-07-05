@@ -131,9 +131,9 @@ export default function Daily({ trip, groupedReservations, parks, waitTimes }) {
     useWaitTimes(Array.from(uniqueParkIds), waitTimes);
 
     // Filter entities by type
-    const attractions = filterEntitiesByType(waitTimes, 'ATTRACTION');
-    const shows = filterEntitiesByType(waitTimes, 'SHOW');
-    const restaurants = filterEntitiesByType(waitTimes, 'RESTAURANT');
+    // const attractions = filterEntitiesByType(waitTimes, 'ATTRACTION');
+    // const shows = filterEntitiesByType(waitTimes, 'SHOW');
+    // const restaurants = filterEntitiesByType(waitTimes, 'RESTAURANT');
 
     return (
         <AuthenticatedLayout
@@ -256,6 +256,14 @@ export default function Daily({ trip, groupedReservations, parks, waitTimes }) {
                     const park = parks.find(p => p.id === parkId);
                     if (!park) return null;
 
+                    // Get entities for this park only
+                    const parkWaitTimes = waitTimes[park.api_id] || {};
+                    const parkEntities = parkWaitTimes.entities || [];
+
+                    const attractions = parkEntities.filter(e => e.entityType === 'ATTRACTION');
+                    const shows = parkEntities.filter(e => e.entityType === 'SHOW');
+                    const restaurants = parkEntities.filter(e => e.entityType === 'RESTAURANT');
+
                     return (
                         <div key={parkId} className="mb-8">
                             <h2 className="text-xl font-semibold text-magicwhite mb-4">
@@ -265,19 +273,19 @@ export default function Daily({ trip, groupedReservations, parks, waitTimes }) {
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <EntityColumn 
                                     title="Attractions" 
-                                    entities={attractions.filter(e => e.parkId === park.api_id)}
+                                    entities={attractions}
                                     showWaitTimes={true}
                                     emptyMessage="No attractions available"
                                 />
                                 <EntityColumn 
                                     title="Shows" 
-                                    entities={shows.filter(e => e.parkId === park.api_id)}
+                                    entities={shows}
                                     showWaitTimes={false}
                                     emptyMessage="No shows available"
                                 />
                                 <EntityColumn 
                                     title="Restaurants" 
-                                    entities={restaurants.filter(e => e.parkId === park.api_id)}
+                                    entities={restaurants}
                                     showWaitTimes={false}
                                     emptyMessage="No restaurants available"
                                 />

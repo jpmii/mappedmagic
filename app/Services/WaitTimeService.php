@@ -13,9 +13,6 @@ class WaitTimeService
     public function fetchWaitTime($apiId)
     {
         $cacheKey = "wait_time_{$apiId}";
-
-        Log::info("WaitTimeService: Fetching data for API ID: {$apiId}");
-
         $response = Http::get("https://api.themeparks.wiki/v1/entity/{$apiId}/live");
 
         if ($response->status() === 429) {
@@ -33,19 +30,15 @@ class WaitTimeService
         }
 
         if ($response->successful()) {
-            $data = $response->json();
-            Log::info("WaitTimeService: API response received for {$apiId}", [
-                'response_keys' => array_keys($data),
-                'live_data_count' => isset($data['liveData']) ? count($data['liveData']) : 0
-            ]);
-            
+            $data = $response->json();          
             $liveData = $this->extractLiveData($data);
-            
+            /*
             Log::info("WaitTimeService: Extracted live data for {$apiId}", [
                 'entities_count' => count($liveData['entities'] ?? []),
                 'entity_types' => array_unique(array_column($liveData['entities'] ?? [], 'entityType')),
                 'park_info' => $liveData['park_info'] ?? null
             ]);
+            */
             
             // Cache the live data for 5 minutes
             Cache::put($cacheKey, $liveData, now()->addMinutes(5));

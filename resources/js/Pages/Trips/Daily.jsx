@@ -13,7 +13,8 @@ function useWaitTimes(parkIds, setWaitTimes) {
         const fetchWaitTimes = async () => {
             console.log('Fetching wait times for park IDs:', parkIds);
             const { data } = await axios.get('/api/wait-times', {
-                params: { park_ids: parkIds }
+                params: { park_ids: parkIds },
+                withCredentials: true,
             });
             console.log('Received wait times data:', data);
             setWaitTimes(data);

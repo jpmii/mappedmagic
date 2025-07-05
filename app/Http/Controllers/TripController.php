@@ -98,11 +98,14 @@ class TripController extends Controller
         // Eager load parks and their attractions
         $parks = Park::with('attractions')->get();
 
-        // Build a map of attraction_id => cached live_data (or null)
+        // Build a map of park_id => cached live_data (or null)
         $waitTimes = [];
         foreach ($parks as $park) {
-            foreach ($park->attractions as $attraction) {
-                $waitTimes[$attraction->id] = Cache::get("wait_time_{$attraction->id}");
+            if ($park->api_id) {
+                $cachedData = Cache::get("wait_time_{$park->api_id}");
+                if ($cachedData) {
+                    $waitTimes[$park->id] = $cachedData;
+                }
             }
         }
 

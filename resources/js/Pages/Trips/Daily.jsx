@@ -11,9 +11,11 @@ import axios from 'axios';
 function useWaitTimes(parkIds, setWaitTimes) {
     useEffect(() => {
         const fetchWaitTimes = async () => {
+            console.log('Fetching wait times for park IDs:', parkIds);
             const { data } = await axios.get('/api/wait-times', {
                 params: { park_ids: parkIds }
             });
+            console.log('Received wait times data:', data);
             setWaitTimes(data);
         };
         fetchWaitTimes();
@@ -41,6 +43,7 @@ function getWaitTime(entity, queueType = 'STANDBY') {
 
 // Helper function to filter entities by type
 function filterEntitiesByType(waitTimes, entityType) {
+    console.log('Filtering entities by type:', entityType, 'from waitTimes:', waitTimes);
     const filteredEntities = [];
     for (const parkData of Object.values(waitTimes)) {
         if (parkData?.entities) {
@@ -48,6 +51,7 @@ function filterEntitiesByType(waitTimes, entityType) {
             filteredEntities.push(...entities);
         }
     }
+    console.log('Filtered entities for', entityType, ':', filteredEntities.length, 'entities');
     return filteredEntities;
 }
 

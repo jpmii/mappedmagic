@@ -10,12 +10,17 @@ class WaitTimeController extends Controller
 {
     public function index(Request $request)
     {
-        $ids = $request->query('attraction_ids', []);
+        $parkIds = $request->query('park_ids', []);
         $waitTimes = [];
-        foreach ($ids as $id) {
-            $cached = Cache::get("wait_time_{$id}");
-            $waitTimes[$id] = $cached ?: null;
+        
+        foreach ($parkIds as $parkId) {
+            // Try to get cached data by park ID first
+            $cached = Cache::get("wait_time_{$parkId}");
+            if ($cached) {
+                $waitTimes[$parkId] = $cached;
+            }
         }
+        
         return response()->json($waitTimes);
     }
 } 

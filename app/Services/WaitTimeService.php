@@ -3,6 +3,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class WaitTimeService
 {
@@ -13,11 +14,17 @@ class WaitTimeService
     {
         $cacheKey = "wait_time_{$apiId}";
 
+        Log::info("WaitTimeService: Fetching data for API ID: {$apiId}");
+
         $response = Http::get("https://api.themeparks.wiki/v1/entity/{$apiId}/live");
 
         if ($response->status() === 429) {
             // If rate limited, return the cached value if available
             $cached = Cache::get($cacheKey);
+            Log::warning("WaitTimeService: Rate limited for API ID: {$apiId}, returning cached data", [
+                'cached_exists' => !is_null($cached),
+                'cached_structure' => $cached ? array_keys($cached) : null
+            ]);
             return [
                 'error' => 'rate_limited',
                 'cached_data' => $cached,
@@ -27,16 +34,36 @@ class WaitTimeService
 
         if ($response->successful()) {
             $data = $response->json();
+            Log::info("WaitTimeService: API response received for {$apiId}", [
+                'response_keys' => array_keys($data),
+                'live_data_count' => isset($data['liveData']) ? count($data['liveData']) : 0
+            ]);
+            
             $liveData = $this->extractLiveData($data);
+            
+            Log::info("WaitTimeService: Extracted live data for {$apiId}", [
+                'entities_count' => count($liveData['entities'] ?? []),
+                'entity_types' => array_unique(array_column($liveData['entities'] ?? [], 'entityType')),
+                'park_info' => $liveData['park_info'] ?? null
+            ]);
             
             // Cache the live data for 5 minutes
             Cache::put($cacheKey, $liveData, now()->addMinutes(5));
+            Log::info("WaitTimeService: Cached data for {$apiId}", [
+                'cache_key' => $cacheKey,
+                'cache_duration' => '5 minutes'
+            ]);
             
             return $liveData;
         }
 
         // On other errors, return cached value if available
-        return Cache::get($cacheKey);
+        $cached = Cache::get($cacheKey);
+        Log::error("WaitTimeService: API error for {$apiId}, returning cached data", [
+            'status_code' => $response->status(),
+            'cached_exists' => !is_null($cached)
+        ]);
+        return $cached;
     }
 
     /**
@@ -198,6 +225,7 @@ class WaitTimeService
     public function clearCache($apiId)
     {
         $cacheKey = "wait_time_{$apiId}";
+        Log::info("WaitTimeService: Clearing cache for {$apiId}");
         return Cache::forget($cacheKey);
     }
 }

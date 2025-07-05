@@ -181,7 +181,9 @@ export default function Daily({ trip, groupedReservations, parks, waitTimes }) {
                     <ul className="space-y-2">
                         {groupedReservations[selectedDate]?.length ? (
                             groupedReservations[selectedDate].map((res) => {
-                                const entity = findEntityData(waitTimes, res.attraction_id);
+                                const parkWaitTimes = waitTimes[res.park_id] || {};
+                                const parkEntities = parkWaitTimes.entities || [];
+                                const entity = parkEntities.find(e => e.id === res.attraction_id);
                                 const standbyWait = getWaitTime(entity, 'STANDBY');
                                 const paidStandbyWait = getWaitTime(entity, 'PAID_STANDBY');
                                 

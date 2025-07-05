@@ -128,6 +128,12 @@ export default function Daily({ trip, groupedReservations, parks, waitTimes }) {
         if (res.park_id) uniqueParkIds.add(res.park_id);
     });
 
+    // Debug: log top-level data
+    console.log('waitTimes:', waitTimes);
+    console.log('parks:', parks);
+    console.log('uniqueParkIds:', Array.from(uniqueParkIds));
+    console.log('groupedReservations:', groupedReservations);
+
     useWaitTimes(Array.from(uniqueParkIds), waitTimes);
 
     // Filter entities by type
@@ -256,9 +262,17 @@ export default function Daily({ trip, groupedReservations, parks, waitTimes }) {
                     const park = parks.find(p => p.id === parkId);
                     if (!park) return null;
 
+                    // Debug: log park info and waitTimes for this park
+                    console.log('Rendering park:', park);
+                    console.log('park.api_id:', park.api_id);
+                    console.log('waitTimes[park.api_id]:', waitTimes[park.api_id]);
+
                     // Get entities for this park only
                     const parkWaitTimes = waitTimes[park.api_id] || {};
                     const parkEntities = parkWaitTimes.entities || [];
+
+                    // Debug: log entities for this park
+                    console.log('parkEntities:', parkEntities);
 
                     const attractions = parkEntities.filter(e => e.entityType === 'ATTRACTION');
                     const shows = parkEntities.filter(e => e.entityType === 'SHOW');

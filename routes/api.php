@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\WaitTimeController;
 
 Route::middleware([
-    'auth:sanctum',
+    'auth',
     config('jetstream.auth_middleware'),
     'verified'
 ])->group(function () {

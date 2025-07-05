@@ -13,7 +13,10 @@ class WaitTimeService
     public function fetchWaitTime($apiId)
     {
         $cacheKey = "wait_time_{$apiId}";
-        $response = Http::get("https://api.themeparks.wiki/v1/entity/{$apiId}/live");
+        $api_key = env('THEMEPARKS_API_KEY');
+        $response = Http::withHeaders([
+            'x-api-key' => $api_key,
+        ])->get("https://api.themeparks.wiki/v1/entity/{$apiId}/live");
 
         if ($response->status() === 429) {
             // If rate limited, return the cached value if available

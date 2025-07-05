@@ -36,6 +36,8 @@ class CacheAllWaitTimes extends Command
         if (! $active) {
             $this->info('No users logged in, skipping.');
             return 0;
+        }else {
+            $this->info('Users are logged in, proceeding to cache wait times.');
         }
 
         foreach (Attraction::all() as $attraction) {

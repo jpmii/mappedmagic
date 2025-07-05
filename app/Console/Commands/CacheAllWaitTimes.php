@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Attraction;
+use App\Models\Park;
 use App\Services\WaitTimeService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -41,13 +42,10 @@ class CacheAllWaitTimes extends Command
             Log::info('Users are logged in, proceeding to cache wait times.');
         }
 
-        foreach (Attraction::all() as $attraction) {
-            if ($attraction->api_id) {
-                $waitTime = $waitTimeService->fetchWaitTime($attraction->api_id);
-                Cache::forever("wait_time_{$attraction->id}", [
-                    'data' => $waitTime,
-                    'cached_at' => now()->toDateTimeString(),
-                ]);
+        foreach (Park::all() as $park) {
+            if ($park->api_id) {
+                $waitTime = $waitTimeService->fetchWaitTime($park->api_id);
+                Cache::forever("wait_time_{$park->api_id}", $waitTime);
             }
         }
         $this->info('All wait times cached!');

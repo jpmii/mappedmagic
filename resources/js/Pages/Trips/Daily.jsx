@@ -8,18 +8,35 @@ import AttractionStatusIcon from '@/Components/AttractionStatusIcon';
 import { Pencil } from 'lucide-react';
 import axios from 'axios';
 
-function useWaitTimes(attractionIds, setWaitTimes) {
+function useWaitTimes(parkIds, setWaitTimes) {
     useEffect(() => {
         const fetchWaitTimes = async () => {
             const { data } = await axios.get('/api/wait-times', {
-                params: { attraction_ids: attractionIds }
+                params: { park_ids: parkIds }
             });
             setWaitTimes(data);
         };
         fetchWaitTimes();
         const interval = setInterval(fetchWaitTimes, 30000); // every 30 seconds
         return () => clearInterval(interval);
-    }, [attractionIds, setWaitTimes]);
+    }, [parkIds, setWaitTimes]);
+}
+
+// Helper function to find entity data by attraction ID
+function findEntityData(waitTimes, attractionId) {
+    for (const parkData of Object.values(waitTimes)) {
+        if (parkData?.entities) {
+            const entity = parkData.entities.find(e => e.id === attractionId);
+            if (entity) return entity;
+        }
+    }
+    return null;
+}
+
+// Helper function to get wait time from queue data
+function getWaitTime(entity, queueType = 'STANDBY') {
+    if (!entity?.queue?.[queueType]) return null;
+    return entity.queue[queueType].waitTime;
 }
 
 export default function Daily({ trip, groupedReservations, parks, waitTimes }) {
@@ -77,12 +94,15 @@ export default function Daily({ trip, groupedReservations, parks, waitTimes }) {
                     <ul className="space-y-2">
                         {groupedReservations[selectedDate]?.length ? (
                             groupedReservations[selectedDate].map((res) => {
-                                const wait = waitTimes[res.attraction_id];
+                                const entity = findEntityData(waitTimes, res.attraction_id);
+                                const standbyWait = getWaitTime(entity, 'STANDBY');
+                                const paidStandbyWait = getWaitTime(entity, 'PAID_STANDBY');
+                                
                                 return (
                                     <li key={res.id} className="p-4 bg-magicblack-600 rounded">
                                         <div className="flex justify-between items-center">
                                             <div>
-                                                <AttractionStatusIcon status={wait?.data?.status} />
+                                                <AttractionStatusIcon status={entity?.status} />
                                                 <AttractionTypeIcon type={res.type} />
                                                 <strong>{res.attraction?.name}</strong> at {new Date(`1970-01-01T${res.time}`).toLocaleTimeString('en-US', {
                                                     hour: 'numeric',
@@ -105,32 +125,32 @@ export default function Daily({ trip, groupedReservations, parks, waitTimes }) {
                                             </div>
                                         </div>
                                         <div className="flex items-center mt-2">
-                                            {wait && wait.data.status === 'OPERATING' && res.type === 'ATTRACTION' && wait.data.standby_wait && (
+                                            {entity?.status === 'OPERATING' && res.type === 'ATTRACTION' && standbyWait && (
                                                 <div
-                                                    className={`text-magicblack ml-2 p-2 rounded text-center ${wait.data.standby_wait < 30
+                                                    className={`text-magicblack ml-2 p-2 rounded text-center ${standbyWait < 30
                                                         ? 'bg-green-400'
-                                                        : wait.data.standby_wait < 60
+                                                        : standbyWait < 60
                                                             ? 'bg-yellow-400'
                                                             : 'bg-red-400'
                                                         }`}
                                                 >
                                                     <span className="block">Standby</span>
-                                                    {wait.data.standby_wait}
+                                                    {standbyWait}
                                                 </div>
                                             )}
-                                            {wait && wait.data.status === 'OPERATING' && res.type === 'ATTRACTION' && wait.data.paid_standby && (
+                                            {entity?.status === 'OPERATING' && res.type === 'ATTRACTION' && paidStandbyWait && (
                                                 <div
                                                     className={
                                                         `ml-2 text-xs px-2 py-1 rounded text-magicblack ` +
-                                                        (wait.data.paid_standby < 30
+                                                        (paidStandbyWait < 30
                                                             ? 'bg-green-400'
-                                                            : wait.data.paid_standby < 60
+                                                            : paidStandbyWait < 60
                                                                 ? 'bg-yellow-400'
                                                                 : 'bg-red-400')
                                                     }
                                                 >
                                                     <span className="block">Paid Standby</span>
-                                                    {wait.data.paid_standby}
+                                                    {paidStandbyWait}
                                                 </div>
                                             )}
                                         </div>
@@ -153,41 +173,39 @@ export default function Daily({ trip, groupedReservations, parks, waitTimes }) {
                                 </h2>
                                 <ul className="mb-4">
                                     {park.attractions.map(attraction => {
-                                        const wait = waitTimes[attraction.id];
-                                        let ageMinutes = null;
-                                        if (wait?.cached_at) {
-                                            ageMinutes = Math.floor((Date.now() - new Date(wait.cached_at).getTime()) / 60000);
-                                        }
+                                        const entity = findEntityData(waitTimes, attraction.id);
+                                        const standbyWait = getWaitTime(entity, 'STANDBY');
+                                        const paidStandbyWait = getWaitTime(entity, 'PAID_STANDBY');
+                                        
                                         return (
                                             <li key={attraction.id} className="flex items-center gap-2 text-magicwhite">
                                                 <span>{attraction.name}</span>
-                                                {wait?.data?.standby_wait !== undefined && wait?.data?.standby_wait > 0 && (
+                                                {standbyWait !== null && standbyWait > 0 && (
                                                     <span
                                                         className={
                                                             `ml-2 text-xs px-2 py-1 rounded text-magicblack ` +
-                                                            (wait.data.standby_wait < 30
+                                                            (standbyWait < 30
                                                                 ? 'bg-green-400'
-                                                                : wait.data.standby_wait < 60
+                                                                : standbyWait < 60
                                                                     ? 'bg-yellow-400'
                                                                     : 'bg-red-400')
                                                         }
                                                     >
-                                                        Standby: {wait.data.standby_wait} min
-                                                        {ageMinutes > 10 ? '⚠️' : ''}
+                                                        Standby: {standbyWait} min
                                                     </span>
                                                 )}
-                                                {wait?.data?.paid_standby !== undefined && wait?.data?.paid_standby > 0 && (
+                                                {paidStandbyWait !== null && paidStandbyWait > 0 && (
                                                     <span
                                                         className={
                                                             `ml-2 text-xs px-2 py-1 rounded text-magicblack ` +
-                                                            (wait.data.paid_standby < 30
+                                                            (paidStandbyWait < 30
                                                                 ? 'bg-green-400'
-                                                                : wait.data.paid_standby < 60
+                                                                : paidStandbyWait < 60
                                                                     ? 'bg-yellow-400'
                                                                     : 'bg-red-400')
                                                         }
                                                     >
-                                                        Paid Standby: {wait.data.paid_standby} min
+                                                        Paid Standby: {paidStandbyWait} min
                                                     </span>
                                                 )}
                                             </li>

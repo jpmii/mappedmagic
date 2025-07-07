@@ -11,12 +11,12 @@ import axios from 'axios';
 function useWaitTimes(parkIds, setWaitTimes) {
     useEffect(() => {
         const fetchWaitTimes = async () => {
-            console.log('Fetching wait times for park IDs:', parkIds);
+            //console.log('Fetching wait times for park IDs:', parkIds);
             const { data } = await axios.get('/api/wait-times', {
                 params: { park_ids: parkIds },
                 withCredentials: true,
             });
-            console.log('Received wait times data:', data);
+            //console.log('Received wait times data:', data);
             setWaitTimes(data);
         };
         fetchWaitTimes();
@@ -44,7 +44,7 @@ function getWaitTime(entity, queueType = 'STANDBY') {
 
 // Helper function to filter entities by type
 function filterEntitiesByType(waitTimes, entityType) {
-    console.log('Filtering entities by type:', entityType, 'from waitTimes:', waitTimes);
+    //console.log('Filtering entities by type:', entityType, 'from waitTimes:', waitTimes);
     const filteredEntities = [];
     for (const parkData of Object.values(waitTimes)) {
         if (parkData?.entities) {
@@ -52,7 +52,7 @@ function filterEntitiesByType(waitTimes, entityType) {
             filteredEntities.push(...entities);
         }
     }
-    console.log('Filtered entities for', entityType, ':', filteredEntities.length, 'entities');
+    //console.log('Filtered entities for', entityType, ':', filteredEntities.length, 'entities');
     return filteredEntities;
 }
 
@@ -131,7 +131,7 @@ export default function Daily({ trip, groupedReservations, parks, waitTimes: ini
     });
 
     useWaitTimes(Array.from(uniqueParkIds), setWaitTimes);
-    console.log('Current waitTimes state:', waitTimes);
+    //console.log('Current waitTimes state:', waitTimes);
 
     // Filter entities by type
     // const attractions = filterEntitiesByType(waitTimes, 'ATTRACTION');
@@ -186,10 +186,10 @@ export default function Daily({ trip, groupedReservations, parks, waitTimes: ini
                             groupedReservations[selectedDate].map((res) => {
                                 const parkWaitTimes = waitTimes[res.park_id] || {};
                                 const parkEntities = parkWaitTimes.entities || [];
-                                const entity = parkEntities.find(e => e.id === res.attraction_id);
+                                const entity = parkEntities.find(e => e.id === res.attraction?.api_id);
                                 const standbyWait = getWaitTime(entity, 'STANDBY');
                                 const paidStandbyWait = getWaitTime(entity, 'PAID_STANDBY');
-                                console.log('Reservation:', res, 'Entity:', entity, 'Standby:', standbyWait, 'Paid:', paidStandbyWait);
+                                //console.log('Reservation:', res, 'Entities:', parkEntities.map(e => e.id));
                                 
                                 return (
                                     <li key={res.id} className="p-4 bg-magicblack-600 rounded">
@@ -218,7 +218,7 @@ export default function Daily({ trip, groupedReservations, parks, waitTimes: ini
                                                 />
                                             </div>
                                         </div>
-                                        <div className="flex items-center mt-2">
+                                        <div className="flex items-center mt-2 ml-[3.6rem]">
                                             {entity?.status === 'OPERATING' && res.type === 'ATTRACTION' && standbyWait && (
                                                 <div
                                                     className={`text-magicblack ml-2 p-2 rounded text-center ${standbyWait < 30

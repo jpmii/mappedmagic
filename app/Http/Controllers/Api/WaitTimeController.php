@@ -22,10 +22,19 @@ class WaitTimeController extends Controller
         $waitTimes = [];
         
         foreach ($parkIds as $parkId) {
-            // Try to get cached data by park ID first
-            $cached = Cache::get("wait_time_{$parkId}");
-            if ($cached) {
-                $waitTimes[$parkId] = $cached;
+            // First try to get the park to find its API ID
+            $park = \App\Models\Park::find($parkId);
+            if ($park && $park->api_id) {
+                // Try to get cached data by API ID
+                $cached = Cache::get("wait_time_{$park->api_id}");
+                if ($cached) {
+                    $waitTimes[$parkId] = $cached;
+                    Log::info("Found cached data for park {$parkId} using API ID {$park->api_id}");
+                } else {
+                    Log::info("No cached data found for park {$parkId} (API ID: {$park->api_id})");
+                }
+            } else {
+                Log::warning("Park {$parkId} not found or has no API ID");
             }
         }
         

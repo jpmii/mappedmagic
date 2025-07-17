@@ -76,4 +76,9 @@ Route::get('/privacy', function () {
     return Inertia::render('Privacy');
 });
 
+// API routes that use session authentication
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/api/wait-times', [App\Http\Controllers\Api\WaitTimeController::class, 'index']);
+});
+
 require __DIR__.'/auth.php';

@@ -113,13 +113,13 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'no-reply@mappedmagic.com'),
+        'address' => env('MAIL_FROM_ADDRESS', 'no-reply@' . env('APP_DOMAIN')),
         'name' => env('MAIL_FROM_NAME', 'MappedMagic'),
     ],
 
     'to' => [
         'contact' => [
-            'address' => env('MAIL_CONTACT_ADDRESS', 'support@mappedmagic.com'),
+            'address' => env('MAIL_CONTACT_ADDRESS', 'support@' . env('APP_DOMAIN')),
             'name' => env('MAIL_CONTACT_NAME', 'MappedMagic'),
         ],
     ],

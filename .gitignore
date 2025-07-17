@@ -6,6 +6,7 @@
 /storage/*.key
 /storage/pail
 /vendor
+.editorconfig
 .env
 .env.backup
 .env.production
@@ -14,6 +15,7 @@
 Homestead.json
 Homestead.yaml
 npm-debug.log
+TODO.md
 yarn-error.log
 /auth.json
 /.fleet
